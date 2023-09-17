@@ -16,7 +16,7 @@ def solve(listString, solutionOne):
         return m
     m = sum(sums[-3:])
     return m
-with open('day1.txt') as f:
+with open('../data/day1.txt') as f:
     validationInput = f.read()
 print("Solution 1: ", solve(validationInput, True))
 print("Solution 2: ", solve(validationInput, False))
