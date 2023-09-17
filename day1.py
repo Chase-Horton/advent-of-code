@@ -1,5 +1,6 @@
+#practicing vim and never nesting
 import requests
-def solve(listString):
+def solve(listString, solutionOne):
     s = 0
     sums = []
     splitList = listString.split('\n')
@@ -9,12 +10,13 @@ def solve(listString):
         else:
             sums.append(s)
             s = 0
-    m = max(sums)
-    return m, sums.index(m)
-f = open('day1.txt')
-validationInput = f.read()
-f.close()
-if (validationInput):
-    print(solve(validationInput))
-else:
-    print(validationInput)
+        sums.sort()
+    if solutionOne:
+        m = sums[-1]
+        return m
+    m = sum(sums[-3:])
+    return m
+with open('day1.txt') as f:
+    validationInput = f.read()
+print("Solution 1: ", solve(validationInput, True))
+print("Solution 2: ", solve(validationInput, False))
