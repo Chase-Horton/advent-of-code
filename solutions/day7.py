@@ -9,6 +9,7 @@ class Folder:
         self.children = []
         self.files = []
         self.parent = parent
+        self.lastSize = None
     def addFile(self, fileObj):
         self.files.append(fileObj)
     def addFolder(self, folder):
@@ -19,13 +20,17 @@ class Folder:
                 return folder
     ### Recursion
     def size(self):
+        if self.lastSize:
+            return self.lastSize
         fileSize = sum([x.size for x in self.files])
         folderSize = 0
         if len(self.children) > 0:
             for child in self.children:
                 folderSize += child.size()
+            self.lastSize = fileSize + folderSize
             return fileSize + folderSize
         else:
+            self.lastSize = fileSize
             return fileSize
     def walk(self):
         allDirs = []
@@ -118,3 +123,18 @@ for commandTup in commands:
         fs.updateDirFromLs(target)
 solution1 = fs.getFilesUnderSize(100000)
 print('Solution 1', solution1)
+#solution 2 total disk space = 70000000 need 30000000 free find smallest dir to delete
+
+#definitely can optimize, first thing we do is call root walk which looks at every folder, then we call size on each folder even though root calls size on every folder in the first iteration
+sizeAvaiable = 70000000 - fs.root.size()
+sizeNeeded = 30000000 - sizeAvaiable
+print('Size available:', sizeAvaiable)
+print('Size needed:', sizeNeeded)
+allFolders = fs.root.walk()
+allSizes = [x.size() for x in allFolders]
+allSizes.sort()
+for i, size in enumerate(allSizes):
+    if size >= sizeNeeded:
+        print('Smallest folder', allFolders[i].name)
+        print('Size:', size)
+        break
