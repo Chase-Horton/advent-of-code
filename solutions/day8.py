@@ -1,14 +1,20 @@
 from copy import deepcopy
 
-#maybe can use sets
-def countRow(row):
-    visible = 1
+def countRow(row, ids = []):
+    visible = 0
     tallest = row[0]
+    newIds = []
+    newIds.append(tallest["tree_id"])
+    if tallest["tree_id"] not in ids:
+        newIds.append(tallest["tree_id"])
+        visible += 1
     for tree in row[1:]:
-        if tree > tallest:
+        if tree["value"] > tallest["value"]:
             tallest = tree
-            visible += 1
-    return visible
+            if tallest["tree_id"] not in ids:
+                visible += 1
+                newIds.append(tallest["tree_id"])
+    return visible, newIds
 def formRows(table):
     fromLeft = deepcopy(table)
     fromRight = deepcopy(table)
@@ -33,8 +39,22 @@ with open('../data/day8.txt') as f:
     data = f.read()
     data = data.strip().split('\n')
 data = [[int(x) for x in string] for string in data]
-rows = formRows(data)
+i = 0
+rows = []
+for string in data:
+    row = []
+    for x in string:
+        obj = {'tree_id':i, 'value':int(x)}
+        row.append(obj)
+        i += 1
+    rows.append(row)
+data = formRows(rows)
 visible = 0
-for row in rows:
-    visible += countRow(row)
+ids = []
+for lst in data:
+    for row in lst:
+        newVisible, newIds = countRow(row, ids)
+        ids += newIds
+        visible += newVisible
 print('Solution 1:', visible)
+#seeing solution 2 should refactor one to use functions to simply look below or above and object and treat this like linked list, then I can just call look up for each d
