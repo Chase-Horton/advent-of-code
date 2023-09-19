@@ -114,17 +114,18 @@ lines = data.strip().split('\n')
 I = Interpreter()
 commands = I.splitDataIntoCommandResp(lines)
 fs = fsEmulator()
-
+# make fs
 for commandTup in commands:
     command, target = commandTup
     if command == 'cd':
         fs.changeDirectory(target)
     else:
         fs.updateDirFromLs(target)
+
 solution1 = fs.getFilesUnderSize(100000)
 print('Solution 1', solution1)
-#solution 2 total disk space = 70000000 need 30000000 free find smallest dir to delete
 
+#solution 2 total disk space = 70000000 need 30000000 free find smallest dir to delete
 #definitely can optimize, first thing we do is call root walk which looks at every folder, then we call size on each folder even though root calls size on every folder in the first iteration
 sizeAvaiable = 70000000 - fs.root.size()
 sizeNeeded = 30000000 - sizeAvaiable
