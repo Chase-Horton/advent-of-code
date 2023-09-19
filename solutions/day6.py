@@ -2,23 +2,19 @@
 with open('../data/day6.txt') as f:
     data = f.read()
 splitStr = data.strip().split('\n')
-print(splitStr)
-def getMatches(splitStr):
+def getMatches(splitStr, numOfMarkers):
     for line in splitStr:
-        testChars = line[:4]
+        testChars = line[:numOfMarkers]
         charSet = set(testChars)
-        print(charSet)
-        if len(set(testChars)) == 4:
-                return 4
-        i = 5
-        for char in line[4:]:
-            print(testChars)
+        if len(set(testChars)) == numOfMarkers:
+                return numOfMarkers
+        i = numOfMarkers + 1
+        for char in line[numOfMarkers:]:
             testChars = testChars[1:]
-            print(testChars)
             testChars += char
-            print(testChars)
-            if len(set(testChars)) == 4:
+            if len(set(testChars)) == numOfMarkers:
                 return i
             i += 1
     return outputs
-print(getMatches(splitStr))
+print('Solution 1:', getMatches(splitStr, 4))
+print('Solution 2:', getMatches(splitStr, 14))
