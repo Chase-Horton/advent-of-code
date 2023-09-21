@@ -42,10 +42,8 @@ class VM:
             os.system('clear')
             print(self.CRT)
             sleep(0.17)
-        #self.outPut
     def run(self):
         for word in self.words:
-            #noop
             self.startCycle()
             self.cycle()
             self.endCycle(word)
