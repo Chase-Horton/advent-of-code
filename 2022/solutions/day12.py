@@ -5,6 +5,9 @@ import os
 from time import sleep
 import heapq
 from rich import print
+from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.pyplot as plt
+from scipy import interpolate
 GRID_SIZE = (5, 8)
 
 class Node:
@@ -201,7 +204,6 @@ def getHeightMap(grid):
     return newGrid
 end = aStar2()
 grid = end.GRID
-print(getHeightMap(grid))
 s = -1
 indexes = []
 while end:
@@ -220,3 +222,38 @@ for x in range(len(grid)):
     string += '\n'
 print(string)
 print(s)
+
+
+
+z = np.array(getHeightMap(grid))
+x, y = np.meshgrid(range(len(z)), range(len(z[0])))
+x = x.T
+y = y.T
+
+# show hight map in 2d
+plt.figure()
+plt.title('letter height')
+p = plt.imshow(z)
+plt.colorbar(p)
+plt.show()
+
+num_points = 100  # Adjust this as needed for smoother or coarser results
+
+# Create a new grid with more points for interpolation
+x_fine = np.linspace(x.min(), x.max(), num_points)
+y_fine = np.linspace(y.min(), y.max(), num_points)
+x_fine, y_fine = np.meshgrid(x_fine, y_fine)
+z_fine = interpolate.griddata((x.flatten(), y.flatten()), z.flatten(), (x_fine, y_fine), method='cubic')
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot_surface(x_fine, y_fine, z_fine, cmap='viridis')
+x_ticks = len(ax.get_xticks())
+y_ticks = len(ax.get_yticks())
+aspect_ratio =   y_ticks/x_ticks
+
+# Set the aspect ratio based on the calculated ratio
+ax.set_xlim(80, 120)
+ax.set_ylim(0, 40)
+ax.set_box_aspect([1, 1, 1])
+plt.title('3d height map')
+plt.show()
