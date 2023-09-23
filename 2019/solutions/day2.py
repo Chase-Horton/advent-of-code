@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 # 1, x, y, z addition, loc 1, loc 2, output loc
 # 2 mult
-with open('../data/day2.txt') as f:
-    data = [int(d) for d in f.read().strip().split(',')]
-#print(data)
 
 class CPU:
-    def __init__(self, tape:list[int]):
-        self.tape = tape
+    def __init__(self, tape=None):
+        if tape:
+            self.tape = tape
         self.i = 0
         self.halt = False
         self.codesDict = {
@@ -29,6 +27,7 @@ class CPU:
         print('HALTED')
         #print(self.tape)
         return self.tape[0]
+
     def evaluateCode(self):
         code = self.tape[self.i]
         # do action
@@ -48,13 +47,10 @@ class CPU:
     def opHalt(self):
         self.halt = True
 
-# testTape = [int(n) for n in '2,4,4,5,99,0'.split(',')]
-# print(testTape)
+with open('../data/day2.txt') as f:
+    data = [int(d) for d in f.read().strip().split(',')]
 
-# intCoder = CPU(testTape)
-# intCoder.run()
-
-intCoder = CPU(data.copy())
+intCoder = CPU()
 intCoder.run(data.copy())
 print('Solution 1:', intCoder.tape[0])
 
@@ -70,7 +66,6 @@ for x in range(100):
         if out == 19690720:
             foundAnswer = [x, y]
             break
-        print(x, y)
     if foundAnswer:
         break
 print('Solution 2:', foundAnswer[0] * 100 + foundAnswer[1])
